@@ -15,14 +15,14 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 
-import mx.iteso.electro.figuras.Carga;
+import mx.iteso.electro.figuras.AbstractCharge;
 import mx.iteso.electro.figuras.CargaPuntual;
 import mx.iteso.electro.util.VectorR3;
 
 public class ControlPanel extends JPanel implements ActionListener{
 
 	CargaPuntual prueba;
-	Vector <Carga> cargas;
+	Vector <AbstractCharge> cargas;
 	JLabel name;
 	JTextField cargatxt;
 	JTextField posXtxt;
@@ -44,7 +44,7 @@ public class ControlPanel extends JPanel implements ActionListener{
 		super();
 
 		prueba = new CargaPuntual(0,1, new VectorR3(0,0,0));
-		cargas = new Vector<Carga>();
+		cargas = new Vector<AbstractCharge>();
 
 		this.setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
 		this.setBackground(Color.white);
@@ -129,7 +129,7 @@ public class ControlPanel extends JPanel implements ActionListener{
 			double z = Double.parseDouble(posZtxt.getText());
 			cargas.add(new CargaPuntual(cargas.size(), carga,new VectorR3(x,y,z)));
 			DefaultListModel mod = new DefaultListModel();
-			for(Carga obj : cargas)
+			for(AbstractCharge obj : cargas)
 			{
 				mod.addElement(obj);
 			}
@@ -143,7 +143,7 @@ public class ControlPanel extends JPanel implements ActionListener{
 		{
 			cargas.remove(list.getSelectedValue());
 			DefaultListModel mod = new DefaultListModel();
-			for(Carga obj : cargas)
+			for(AbstractCharge obj : cargas)
 			{
 				mod.addElement(obj);
 			}
@@ -159,9 +159,9 @@ public class ControlPanel extends JPanel implements ActionListener{
 			double y = Double.parseDouble(posQYtxt.getText());
 			double z = Double.parseDouble(posQZtxt.getText());
 			double cargaTotal = 0;
-			prueba.mover(new VectorR3(x,y,z));
+			prueba.setPosition(new VectorR3(x,y,z));
 			prueba.setMagnitud(1);
-			for(Carga q : cargas)
+			for(AbstractCharge q : cargas)
 			{
 				cargaTotal += prueba.fuerza(q);
 			}

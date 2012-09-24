@@ -7,8 +7,6 @@ import javax.media.opengl.GLCapabilities;
 import javax.media.opengl.GLProfile;
 import javax.media.opengl.awt.GLCanvas;
 import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.JSlider;
 import javax.swing.JSplitPane;
 
 import mx.iteso.electro.control.ControlPanel;
