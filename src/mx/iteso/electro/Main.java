@@ -7,13 +7,16 @@ import javax.media.opengl.GLCapabilities;
 import javax.media.opengl.GLProfile;
 import javax.media.opengl.awt.GLCanvas;
 import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.JSlider;
+import javax.swing.JSplitPane;
 
+import mx.iteso.electro.control.ControlPanel;
 import mx.iteso.electro.gfx.*;
 import mx.iteso.electro.simulator.*;
 
 public class Main {
 
-	//Test
 	/**
 	 * @param args
 	 */
@@ -27,8 +30,14 @@ public class Main {
 		
 		glcanvas.setSize(800, 600);
 		
+		
 		JFrame frame = new JFrame("Electro");
-		frame.getContentPane().add(glcanvas);
+		ControlPanel controlPanel = new ControlPanel();
+		JSplitPane split = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT,
+				glcanvas,controlPanel);
+		split.setOneTouchExpandable(true);
+		split.setDividerLocation(900);
+		frame.getContentPane().add(split);
 
 		
 		final Simulator simulator = new Simulator(renderer);
