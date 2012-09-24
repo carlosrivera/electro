@@ -9,7 +9,6 @@ public class SceneObject implements Renderable {
 	protected int _displayList;
 	protected boolean _compiled;
 	
-	
 	public boolean isCompiled() {
 		return _compiled;
 	}
