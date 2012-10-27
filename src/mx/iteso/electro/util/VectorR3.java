@@ -1,9 +1,11 @@
 package mx.iteso.electro.util;
 
+import mx.iteso.electro.util.VectorR3;
+
 public class VectorR3 {
-	private double x;
-	private double y;
-	private double z;
+	public double x;
+	public double y;
+	public double z;
 	
 	public VectorR3(double x,double y,double z)
 	{
@@ -35,6 +37,13 @@ public class VectorR3 {
 	public boolean equals(VectorR3 v)
 	{
 		return x==v.x && y == v.y && z == v.z;
+	}
+
+	public boolean closeEnough(VectorR3 pos){
+		double e = 1.1;
+		if(pos.x - x < e && pos.z - z < e)
+			return true;
+		return false;
 	}
 
 }

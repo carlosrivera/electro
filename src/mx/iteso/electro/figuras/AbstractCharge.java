@@ -1,13 +1,15 @@
 package mx.iteso.electro.figuras;
 
-import mx.iteso.electro.gfx.SceneObject;
+import javax.media.opengl.GL;
 
-// Changed to abstract, it represents an object, not an action
-public abstract class AbstractCharge extends SceneObject  {
+public abstract class AbstractCharge {
 	
 	public static final double K = 8.999;
+	public static final double infX = 500;	
+	public static final double infY = 500;	
+	public static final double infZ = 500;	
 	
-	// Deprecated
-	public abstract void Dibujar();
+	public abstract void draw(GL gl);
+	public abstract void drawField(GL gl, int divisions);
 
 }

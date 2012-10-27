@@ -28,7 +28,7 @@ public class ControlPanel extends JPanel implements ActionListener{
 	JTextField posXtxt;
 	JTextField posYtxt;
 	JTextField posZtxt;
-	JList list;
+	JList<AbstractCharge> list;
 	JTextField cargaQtxt;
 	JTextField posQXtxt;
 	JTextField posQYtxt;
@@ -39,12 +39,12 @@ public class ControlPanel extends JPanel implements ActionListener{
 	 */
 	private static final long serialVersionUID = 1L;
 
-	public ControlPanel()
+	public ControlPanel(Vector<AbstractCharge> charges)
 	{
 		super();
 
 		prueba = new CargaPuntual(0,1, new VectorR3(0,0,0));
-		cargas = new Vector<AbstractCharge>();
+		cargas = charges;
 
 		this.setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
 		this.setBackground(Color.white);
@@ -60,7 +60,7 @@ public class ControlPanel extends JPanel implements ActionListener{
 		JLabel posQZ = new JLabel("Z=");
 		posQZtxt = new JTextField("0");
 
-		list = new JList(cargas);
+		list = new JList<AbstractCharge>(cargas);
 		JScrollPane cargasPanel = new JScrollPane(list);
 		JButton agregar = new JButton("Agregar carga");
 		agregar.setActionCommand("agregar");
@@ -128,7 +128,7 @@ public class ControlPanel extends JPanel implements ActionListener{
 			double y = Double.parseDouble(posYtxt.getText());
 			double z = Double.parseDouble(posZtxt.getText());
 			cargas.add(new CargaPuntual(cargas.size(), carga,new VectorR3(x,y,z)));
-			DefaultListModel mod = new DefaultListModel();
+			DefaultListModel<AbstractCharge> mod = new DefaultListModel<AbstractCharge>();
 			for(AbstractCharge obj : cargas)
 			{
 				mod.addElement(obj);
@@ -142,7 +142,7 @@ public class ControlPanel extends JPanel implements ActionListener{
 		if(e.getActionCommand().equals("quitar"))
 		{
 			cargas.remove(list.getSelectedValue());
-			DefaultListModel mod = new DefaultListModel();
+			DefaultListModel<AbstractCharge> mod = new DefaultListModel<AbstractCharge>();
 			for(AbstractCharge obj : cargas)
 			{
 				mod.addElement(obj);

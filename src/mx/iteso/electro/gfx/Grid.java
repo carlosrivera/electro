@@ -1,13 +1,13 @@
 package mx.iteso.electro.gfx;
 
-import javax.media.opengl.GL2;
+import javax.media.opengl.GL;
 import javax.media.opengl.GLAutoDrawable;
 
 public class Grid extends SceneObject {
 
 	@Override
 	public void render(GLAutoDrawable gLDrawable) {
-		final GL2 gl = gLDrawable.getGL().getGL2();
+		final GL gl = gLDrawable.getGL();
 		
 		if (_compiled) {
 			gl.glPushMatrix();
@@ -20,14 +20,14 @@ public class Grid extends SceneObject {
 
 	@Override
 	public void compile(GLAutoDrawable gLDrawable) {
-		final GL2 gl = gLDrawable.getGL().getGL2();
+		final GL gl = gLDrawable.getGL();
 		
 		_displayList = gl.glGenLists(1);
-		gl.glNewList(_displayList, GL2.GL_COMPILE);
+		gl.glNewList(_displayList, GL.GL_COMPILE);
 		gl.glColor3f(.3f, .3f, .3f);
 
 
-		gl.glBegin(GL2.GL_LINES);
+		gl.glBegin(GL.GL_LINES);
 		
 		for (int i = -10; i <= 10; i++) {
 			if (i == 0) {
