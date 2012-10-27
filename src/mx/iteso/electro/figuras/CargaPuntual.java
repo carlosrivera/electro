@@ -11,6 +11,7 @@ import mx.iteso.electro.util.VectorR3;
 
 public class CargaPuntual extends AbstractCharge{
 	private VectorR3 pos;
+	private VectorR3 fuerza;
 	private double _charge;
 	private String name;
 	private static GLU glu = new GLU();
@@ -21,32 +22,52 @@ public class CargaPuntual extends AbstractCharge{
 		this._charge = charge;
 		this.pos = pos;
 		this.name = "q"+name;
+		fuerza = new VectorR3(0,0,0);
+	}
+	
+	public VectorR3 getPos() {
+		return pos;
 	}
 
-	public void setMagnitud(double charge)
-	{
-		this._charge = charge;
+	public void setPos(VectorR3 pos) {
+		this.pos = pos;
 	}
 
-	public VectorR3 fuerza(List<AbstractCharge> cargas)
+	public VectorR3 getFuerza() {
+		return fuerza;
+	}
+
+	public void setFuerza(VectorR3 fuerza) {
+		this.fuerza = fuerza;
+	}
+
+	public double get_charge() {
+		return _charge;
+	}
+
+	public void set_charge(double _charge) {
+		this._charge = _charge;
+	}
+	
+	public VectorR3 calculateForce(List<AbstractCharge> cargas)
 	{
-		VectorR3 F = new VectorR3(0,0,0);
+		fuerza = new VectorR3(0,0,0);
 		for(AbstractCharge carga : cargas)
 			if(carga instanceof CargaPuntual)
 			{
 				CargaPuntual q = (CargaPuntual)carga;
 				if(!pos.equals(q.pos))
 				{
-					F.x+= (q._charge*pos.resta(q.pos).x) / Math.pow((pos.resta(q.pos).magnitud()),3);
-					F.y+= (q._charge*pos.resta(q.pos).y) / Math.pow((pos.resta(q.pos).magnitud()),3);
-					F.z+= (q._charge*pos.resta(q.pos).z) / Math.pow((pos.resta(q.pos).magnitud()),3);
+					fuerza.x+= (q._charge*pos.resta(q.pos).x) / Math.pow((pos.resta(q.pos).magnitud()),3);
+					fuerza.y+= (q._charge*pos.resta(q.pos).y) / Math.pow((pos.resta(q.pos).magnitud()),3);
+					fuerza.z+= (q._charge*pos.resta(q.pos).z) / Math.pow((pos.resta(q.pos).magnitud()),3);
 				}
 			}
-		F.x *= getK()*_charge;
-		F.y *= getK()*_charge;
-		F.z *= getK()*_charge;
+		fuerza.x *= getK()*_charge;
+		fuerza.y *= getK()*_charge;
+		fuerza.z *= getK()*_charge;
 
-		return F;
+		return fuerza;
 	}
 
 	// Renamed from mover()
@@ -63,18 +84,25 @@ public class CargaPuntual extends AbstractCharge{
 
 	public String toString()
 	{
-		return name+" "+pos;
+		return name+" "+pos+" F="+String.format("%1$,.3f",fuerza.magnitud());
 	}
 
 	@Override
 	public void draw(GL gl) 
 	{
+		double mf = fuerza.magnitud();
 		//	    monky.bind();
 		glu.gluQuadricTexture(puntito, true);
 		gl.glPushMatrix();
+		gl.glColor3d(1, 1, 1);
 		gl.glTranslated(pos.x, pos.y, pos.z);
-		//	    gl.glRotated(90, 1, 0, 0);
-		glu.gluSphere(puntito, 0.05, 10, 10);
+		glu.gluSphere(puntito, 0.02, 10, 10);
+		gl.glBegin(GL.GL_LINES);
+		gl.glVertex3d(0, 0, 0);
+		gl.glVertex3d(fuerza.x/mf, fuerza.y/mf, fuerza.z/mf);
+		gl.glVertex3d(fuerza.x/mf, fuerza.y/mf, fuerza.z/mf);		
+		gl.glVertex3d(fuerza.x/mf-.05, fuerza.y/mf-.05, fuerza.z/mf-.05);		
+		gl.glEnd();
 		gl.glPopMatrix();	    
 	}
 
@@ -89,14 +117,8 @@ public class CargaPuntual extends AbstractCharge{
 		{
 			for(int y = 0 ; y <= 360; y+=360/divisions)
 			{
-				//			    for(int z = 0 ; z <= 360; z+=360/divisions)
-				//			    {
-				//			    	double a =infX*Math.cos(x);
-				//			    	double b =infY*Math.sin(y);
-				//			    	double c =infZ*Math.cos(z);
 				gl.glVertex3d(pos.x, pos.y, pos.z);
 				gl.glVertex3d(infX*Math.toDegrees(Math.cos(x)), infY*Math.toDegrees(Math.sin(x)), 0);
-				//			    }
 			}
 		}
 		gl.glEnd();

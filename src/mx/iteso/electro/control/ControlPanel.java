@@ -4,6 +4,8 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.util.Vector;
 
 import javax.swing.BoxLayout;
@@ -14,12 +16,13 @@ import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
+import javax.swing.ListModel;
 
 import mx.iteso.electro.figuras.AbstractCharge;
 import mx.iteso.electro.figuras.CargaPuntual;
 import mx.iteso.electro.util.VectorR3;
 
-public class ControlPanel extends JPanel implements ActionListener{
+public class ControlPanel extends JPanel implements ActionListener,MouseListener{
 
 	CargaPuntual prueba;
 	Vector <AbstractCharge> cargas;
@@ -52,7 +55,7 @@ public class ControlPanel extends JPanel implements ActionListener{
 
 		JLabel nameQ = new JLabel("Carga de prueba Q");
 		nameQ.setFont(new Font(nameQ.getFont().getName(),Font.BOLD, nameQ.getFont().getSize()+5));
-		JLabel cargaQ = new JLabel("F=");
+		JLabel cargaQ = new JLabel("Q=");
 		cargaQtxt = new JTextField("0");
 		JLabel posQX = new JLabel("X=");
 		posQXtxt = new JTextField("0");
@@ -64,6 +67,7 @@ public class ControlPanel extends JPanel implements ActionListener{
 		fuerzaQtxt = new JTextField("0");
 
 		list = new JList<AbstractCharge>(cargas);
+		list.addMouseListener(this);
 		JScrollPane cargasPanel = new JScrollPane(list);
 		JButton agregar = new JButton("Agregar carga");
 		agregar.setActionCommand("agregar");
@@ -75,10 +79,10 @@ public class ControlPanel extends JPanel implements ActionListener{
 		quitar.addActionListener(this);
 		quitar.setBackground(Color.black);
 		quitar.setForeground(Color.white);
-	
+
 		name = new JLabel("Carga q");
 		name.setFont(new Font(name.getFont().getName(),Font.BOLD, name.getFont().getSize()+5));
-		JLabel carga = new JLabel("F=");
+		JLabel carga = new JLabel("Q=");
 		cargatxt = new JTextField("0");
 		JLabel posX = new JLabel("X=");
 		posXtxt = new JTextField("0");
@@ -165,10 +169,68 @@ public class ControlPanel extends JPanel implements ActionListener{
 			double y = Double.parseDouble(posQYtxt.getText());
 			double z = Double.parseDouble(posQZtxt.getText());
 			prueba.setPosition(new VectorR3(x,y,z));
-			prueba.setMagnitud(carga);
-			fuerzaQtxt.setText(prueba.fuerza(cargas).toString());
+			prueba.set_charge(carga);
+			fuerzaQtxt.setText(prueba.calculateForce(cargas).toString());
 
 		}
+
+	}
+
+	@Override
+	public void mouseClicked(MouseEvent e) {
+		if(e.getClickCount() == 1)
+		{
+			int index = list.locationToIndex(e.getPoint());
+			ListModel<AbstractCharge> dlm = list.getModel();
+			if(dlm.getSize()>index && index>=0)
+			{
+				CargaPuntual item = (CargaPuntual) dlm.getElementAt(index);;
+				list.ensureIndexIsVisible(index);
+				cargatxt.setText(""+item.get_charge());
+				 posXtxt.setText(""+item.getPos().x);
+				 posYtxt.setText(""+item.getPos().y);
+				 posZtxt.setText(""+item.getPos().z);
+			}
+		}
+		if(e.getClickCount() == 2)
+		{
+			int index = list.locationToIndex(e.getPoint());
+			ListModel<AbstractCharge> dlm = list.getModel();
+			if(dlm.getSize()>index && index>=0)
+			{
+				CargaPuntual item = (CargaPuntual) dlm.getElementAt(index);;
+				list.ensureIndexIsVisible(index);
+				cargaQtxt.setText(""+item.get_charge());
+				 posQXtxt.setText(""+item.getPos().x);
+				 posQYtxt.setText(""+item.getPos().y);
+				 posQZtxt.setText(""+item.getPos().z);
+				 fuerzaQtxt.setText(""+item.getFuerza());
+				 prueba = item;
+			}
+		}
+	}
+
+	@Override
+	public void mousePressed(MouseEvent e) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void mouseReleased(MouseEvent e) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void mouseEntered(MouseEvent e) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void mouseExited(MouseEvent e) {
+		// TODO Auto-generated method stub
 
 	}
 

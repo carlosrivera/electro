@@ -16,7 +16,7 @@ public abstract class AbstractCharge
 	
 	public abstract void draw(GL gl);
 	public abstract void drawField(GL gl, int divisions);
-	public abstract VectorR3 fuerza(List<AbstractCharge> carga);
+	public abstract VectorR3 calculateForce(List<AbstractCharge> carga);
 	
 	public double getK()
 	{

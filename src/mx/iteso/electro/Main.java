@@ -32,7 +32,7 @@ public class Main {
 		JSplitPane split = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT,
 				field,controlPanel);
 		split.setOneTouchExpandable(true);
-		split.setDividerLocation(800);
+		split.setDividerLocation(750);
 		frame.getContentPane().add(split);
 
 		

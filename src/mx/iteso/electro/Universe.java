@@ -41,7 +41,7 @@ public class Universe extends GLCanvas implements GLEventListener, KeyListener
 	private static final long serialVersionUID = 1L;
 	private FPSAnimator animator;
 	private GLU glu = new GLU();
-	private double observerX = 0, observerY = 1.8, observerZ = 2.5;
+	private double observerX = 0, observerY = 1, observerZ = 2.5;
 	private double observerAngle = 0;
 	private double observerSpeed = 0.3;
 	private Status currentStatus = Status.IDLE;
@@ -127,7 +127,7 @@ public class Universe extends GLCanvas implements GLEventListener, KeyListener
 		for(AbstractCharge c : charges)
 		{
 			c.draw(gl);
-			c.drawField(gl, 3);
+//			c.drawField(gl, 3);
 		}
 
 	}
