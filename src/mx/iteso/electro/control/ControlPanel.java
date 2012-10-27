@@ -33,6 +33,7 @@ public class ControlPanel extends JPanel implements ActionListener{
 	JTextField posQXtxt;
 	JTextField posQYtxt;
 	JTextField posQZtxt;
+	JTextField fuerzaQtxt;
 
 	/**
 	 * 
@@ -59,6 +60,8 @@ public class ControlPanel extends JPanel implements ActionListener{
 		posQYtxt = new JTextField("0");
 		JLabel posQZ = new JLabel("Z=");
 		posQZtxt = new JTextField("0");
+		JLabel fuerzaQ = new JLabel("F(total)=");
+		fuerzaQtxt = new JTextField("0");
 
 		list = new JList<AbstractCharge>(cargas);
 		JScrollPane cargasPanel = new JScrollPane(list);
@@ -99,6 +102,8 @@ public class ControlPanel extends JPanel implements ActionListener{
 		this.add(posQYtxt);
 		this.add(posQZ);
 		this.add(posQZtxt);
+		this.add(fuerzaQ);
+		this.add(fuerzaQtxt);
 
 		this.add(calcular);
 
@@ -155,14 +160,14 @@ public class ControlPanel extends JPanel implements ActionListener{
 		}
 		if(e.getActionCommand().equals("calcular"))
 		{
+			double carga = Double.parseDouble(cargaQtxt.getText());
 			double x = Double.parseDouble(posQXtxt.getText());
 			double y = Double.parseDouble(posQYtxt.getText());
 			double z = Double.parseDouble(posQZtxt.getText());
-			double cargaTotal = 0;
 			prueba.setPosition(new VectorR3(x,y,z));
-			prueba.setMagnitud(1);
-				cargaTotal += prueba.fuerza(cargas);
-			cargaQtxt.setText(cargaTotal+"");			
+			prueba.setMagnitud(carga);
+			fuerzaQtxt.setText(prueba.fuerza(cargas).toString());
+
 		}
 
 	}

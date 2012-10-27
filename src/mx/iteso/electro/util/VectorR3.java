@@ -1,6 +1,5 @@
 package mx.iteso.electro.util;
 
-import mx.iteso.electro.util.VectorR3;
 
 public class VectorR3 {
 	public double x;
@@ -31,7 +30,7 @@ public class VectorR3 {
 	
 	public String toString()
 	{
-		return "("+x+","+y+","+z+")";
+		return String.format("%1$,.3f",x)+"i+"+String.format("%1$,.3f",y)+"j+"+String.format("%1$,.3f",z)+"k";
 	}
 	
 	public boolean equals(VectorR3 v)

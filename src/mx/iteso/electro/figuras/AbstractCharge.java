@@ -4,6 +4,8 @@ import java.util.List;
 
 import javax.media.opengl.GL;
 
+import mx.iteso.electro.util.VectorR3;
+
 public abstract class AbstractCharge 
 {
 	
@@ -14,6 +16,11 @@ public abstract class AbstractCharge
 	
 	public abstract void draw(GL gl);
 	public abstract void drawField(GL gl, int divisions);
-	public abstract double fuerza(List<AbstractCharge> carga);
+	public abstract VectorR3 fuerza(List<AbstractCharge> carga);
+	
+	public double getK()
+	{
+		return K*Math.pow(10, 9);
+	}
 
 }
