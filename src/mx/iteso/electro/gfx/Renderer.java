@@ -1,6 +1,6 @@
 package mx.iteso.electro.gfx;
 
-import javax.media.opengl.GL2;
+import javax.media.opengl.GL;
 import javax.media.opengl.GLAutoDrawable;
 import javax.media.opengl.GLEventListener;
 import javax.media.opengl.glu.GLU;
@@ -16,9 +16,9 @@ public class Renderer implements GLEventListener {
 	}
 
 	public void display(GLAutoDrawable gLDrawable) {
-		final GL2 gl = gLDrawable.getGL().getGL2();
+		final GL gl = gLDrawable.getGL();
 		
-		gl.glClear(GL2.GL_COLOR_BUFFER_BIT | GL2.GL_DEPTH_BUFFER_BIT);
+		gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
 		
 		// ToDo: Insert camera here!
 		gl.glLoadIdentity();
@@ -37,9 +37,9 @@ public class Renderer implements GLEventListener {
 
 	public void init(GLAutoDrawable gLDrawable) {
 		
-		GL2 gl = gLDrawable.getGL().getGL2();
+		GL gl = gLDrawable.getGL();
 		gl.glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-		gl.glShadeModel(GL2.GL_SMOOTH);
+		gl.glShadeModel(GL.GL_SMOOTH);
 		
 		_scene.setGLDrawable(gLDrawable);
 		
@@ -50,7 +50,7 @@ public class Renderer implements GLEventListener {
 	public void reshape(GLAutoDrawable gLDrawable, int x, int y, int width,
 			int height) {
 
-		final GL2 gl = gLDrawable.getGL().getGL2();
+		final GL gl = gLDrawable.getGL();
 		
 		GLU glu = new GLU();
 		
@@ -62,12 +62,12 @@ public class Renderer implements GLEventListener {
 		final float h = (float) width / (float) height;
 
 		gl.glViewport(0, 0, width, height);
-		gl.glMatrixMode(GL2.GL_PROJECTION);
+		gl.glMatrixMode(GL.GL_PROJECTION);
 		
 		gl.glLoadIdentity();
 		glu.gluPerspective(45.0f, h, 1.0, 200.0);
 		
-		gl.glMatrixMode(GL2.GL_MODELVIEW);
+		gl.glMatrixMode(GL.GL_MODELVIEW);
 		gl.glLoadIdentity(); 
 	}
 
