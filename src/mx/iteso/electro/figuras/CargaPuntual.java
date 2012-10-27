@@ -1,5 +1,7 @@
 package mx.iteso.electro.figuras;
 
+import java.util.List;
+
 import javax.media.opengl.GL;
 import javax.media.opengl.glu.GLU;
 import javax.media.opengl.glu.GLUquadric;
@@ -27,8 +29,9 @@ public class CargaPuntual extends AbstractCharge{
 		this._charge = charge;
 	}
 	
-	public double fuerza(AbstractCharge carga)
+	public double fuerza(List<AbstractCharge> cargas)
 	{
+		for(AbstractCharge carga : cargas )
 		if(carga instanceof CargaPuntual)
 		{
 			CargaPuntual q = (CargaPuntual)carga;
@@ -53,7 +56,7 @@ public class CargaPuntual extends AbstractCharge{
 	
 	public String toString()
 	{
-		return name;
+		return name+" "+pos;
 	}
 
 	@Override
@@ -75,18 +78,18 @@ public class CargaPuntual extends AbstractCharge{
 	    gl.glColor3d(1, 1, 1);
 	    gl.glTranslated(pos.x, pos.y, pos.z);
 	    gl.glBegin(GL.GL_LINES);
-	    for(int x = 0 ; x <= 360; x+=360/divisions)
+	    for(int x = 0 ; x <= 360; x+=45)
 	    {
 		    for(int y = 0 ; y <= 360; y+=360/divisions)
 		    {
-			    for(int z = 0 ; z <= 360; z+=360/divisions)
-			    {
+//			    for(int z = 0 ; z <= 360; z+=360/divisions)
+//			    {
 //			    	double a =infX*Math.cos(x);
 //			    	double b =infY*Math.sin(y);
 //			    	double c =infZ*Math.cos(z);
 			    	gl.glVertex3d(pos.x, pos.y, pos.z);
-			    	gl.glVertex3d(infX*Math.cos(x), infY*Math.sin(y), infZ*Math.cos(z));
-			    }
+			    	gl.glVertex3d(infX*Math.toDegrees(Math.cos(x)), infY*Math.toDegrees(Math.sin(x)), 0);
+//			    }
 		    }
 	    }
 	    gl.glEnd();

@@ -161,10 +161,7 @@ public class ControlPanel extends JPanel implements ActionListener{
 			double cargaTotal = 0;
 			prueba.setPosition(new VectorR3(x,y,z));
 			prueba.setMagnitud(1);
-			for(AbstractCharge q : cargas)
-			{
-				cargaTotal += prueba.fuerza(q);
-			}
+				cargaTotal += prueba.fuerza(cargas);
 			cargaQtxt.setText(cargaTotal+"");			
 		}
 

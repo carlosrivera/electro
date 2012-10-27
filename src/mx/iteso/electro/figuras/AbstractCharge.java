@@ -1,8 +1,11 @@
 package mx.iteso.electro.figuras;
 
+import java.util.List;
+
 import javax.media.opengl.GL;
 
-public abstract class AbstractCharge {
+public abstract class AbstractCharge 
+{
 	
 	public static final double K = 8.999;
 	public static final double infX = 500;	
@@ -11,5 +14,6 @@ public abstract class AbstractCharge {
 	
 	public abstract void draw(GL gl);
 	public abstract void drawField(GL gl, int divisions);
+	public abstract double fuerza(List<AbstractCharge> carga);
 
 }
