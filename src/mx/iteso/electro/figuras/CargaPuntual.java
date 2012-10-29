@@ -99,7 +99,7 @@ public class CargaPuntual extends AbstractCharge{
 		else
 			gl.glColor3d(0, 0, 1);			
 		gl.glTranslated(pos.x, pos.y, pos.z);
-		glu.gluSphere(puntito, 0.02, 10, 10);
+		glu.gluSphere(puntito, 0.12, 10, 10);
 		gl.glBegin(GL.GL_LINES);
 		gl.glVertex3d(0, 0, 0);
 		gl.glVertex3d(fuerza.x/mf, fuerza.y/mf, fuerza.z/mf);
@@ -112,12 +112,17 @@ public class CargaPuntual extends AbstractCharge{
 	@Override
 	public void drawField(GL gl, List<AbstractCharge> charges) 
 	{
-		if (charges.size()>=2)
+		double maxchar = _charge;
+		for(AbstractCharge a : charges)
 		{
-		double cantLineas = Math.PI/16;
+			CargaPuntual c = (CargaPuntual)a;
+			if(maxchar < c._charge)
+				maxchar = c._charge;
+		}
+		double color = 1;
+		double cantLineas = Math.PI/(Math.abs(_charge*8/maxchar));
 		gl.glPushMatrix();
 		gl.glColor3d(1, 1, 1);
-		//		gl.glTranslated(pos.x, pos.y, pos.z);
 		gl.glBegin(GL.GL_LINES);
 		double xi = pos.x;
 		double yi = pos.y;
@@ -126,16 +131,21 @@ public class CargaPuntual extends AbstractCharge{
 		for(int i = 0; i < (int) (Math.PI*2/cantLineas+1); i++)
 			cirq[i] = new VectorR3(xi,yi,zi);
 
-		for(double z = 0; z < 9; z+=.5)
+		for(double z = 0; z < Math.PI*2; z+=cantLineas)
 		{
 			if(z==0) continue;
-			//			for(double x = 0 ; x <= Math.PI*2; x+=cantLineas)
+			for(double x = 0 ; x <= Math.PI*2; x+=cantLineas)
 			{
-				zi = 0;// infZ*Math.cos(x);
+				if(_charge>=0)
+					gl.glColor3d(color, 0,0);
+				else
+					gl.glColor3d(0,0,color);
+
+				color=1-z/Math.PI*2/3;
+				zi =  z*Math.cos(x);
 				int i = 0;
 				for(double y = 0 ; y <= Math.PI*2; y+=cantLineas)
 				{
-					//					if(z%2==0)
 					VectorR3 p = new VectorR3(pos.x+cirq[i].x, pos.y+cirq[i].y, pos.z+cirq[i].z);
 					gl.glVertex3d(p.x, p.y, p.z);
 					VectorR3 e = new VectorR3(0,0,0);
@@ -154,12 +164,9 @@ public class CargaPuntual extends AbstractCharge{
 					e = e.unit();
 					e = e.prod(.2);
 
-					//					e.prod(new VectorR3(getK()*_charge*R.x/R.magnitud(),getK()*R.y/R.magnitud(),getK()*_charge*R.z/R.magnitud()));
 					gl.glVertex3d(pos.x+cirq[i].x+e.x, pos.y+cirq[i].y+e.y, pos.z+cirq[i].z+e.z);
 					xi = z*Math.cos(y);
 					yi = z*Math.sin(y);
-					//					if(z%2==0)
-					//					gl.glVertex3d(pos.x+xi,pos.y+yi,pos.z+zi);
 
 					cirq[i] = new VectorR3(xi,yi,zi);
 					i++;
@@ -168,6 +175,5 @@ public class CargaPuntual extends AbstractCharge{
 		}
 		gl.glEnd();
 		gl.glPopMatrix();
-	}
 	}
 }
