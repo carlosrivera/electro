@@ -24,7 +24,7 @@ public class CargaPuntual extends AbstractCharge{
 		this.name = "q"+name;
 		fuerza = new VectorR3(0,0,0);
 	}
-	
+
 	public VectorR3 getPos() {
 		return pos;
 	}
@@ -48,7 +48,7 @@ public class CargaPuntual extends AbstractCharge{
 	public void set_charge(double _charge) {
 		this._charge = _charge;
 	}
-	
+
 	public VectorR3 calculateForce(List<AbstractCharge> cargas)
 	{
 		fuerza = new VectorR3(0,0,0);
@@ -84,7 +84,7 @@ public class CargaPuntual extends AbstractCharge{
 
 	public String toString()
 	{
-		return name+" "+pos+" F="+String.format("%1$,.3f",fuerza.magnitud());
+		return name+" "+pos.toVector()+" F="+String.format("%1$,.3f",fuerza.magnitud());
 	}
 
 	@Override
@@ -94,7 +94,10 @@ public class CargaPuntual extends AbstractCharge{
 		//	    monky.bind();
 		glu.gluQuadricTexture(puntito, true);
 		gl.glPushMatrix();
-		gl.glColor3d(1, 1, 1);
+		if(_charge>=0)
+			gl.glColor3d(1, 0, 0);
+		else
+			gl.glColor3d(0, 0, 1);			
 		gl.glTranslated(pos.x, pos.y, pos.z);
 		glu.gluSphere(puntito, 0.02, 10, 10);
 		gl.glBegin(GL.GL_LINES);
@@ -107,23 +110,64 @@ public class CargaPuntual extends AbstractCharge{
 	}
 
 	@Override
-	public void drawField(GL gl, int divisions) 
+	public void drawField(GL gl, List<AbstractCharge> charges) 
 	{
+		if (charges.size()>=2)
+		{
+		double cantLineas = Math.PI/16;
 		gl.glPushMatrix();
 		gl.glColor3d(1, 1, 1);
-		gl.glTranslated(pos.x, pos.y, pos.z);
+		//		gl.glTranslated(pos.x, pos.y, pos.z);
 		gl.glBegin(GL.GL_LINES);
-		for(int x = 0 ; x <= 360; x+=45)
+		double xi = pos.x;
+		double yi = pos.y;
+		double zi = pos.z;// infZ*Math.cos(x);
+		VectorR3[] cirq = new VectorR3[(int) (Math.PI*2/cantLineas+1)];
+		for(int i = 0; i < (int) (Math.PI*2/cantLineas+1); i++)
+			cirq[i] = new VectorR3(xi,yi,zi);
+
+		for(double z = 0; z < 9; z+=.5)
 		{
-			for(int y = 0 ; y <= 360; y+=360/divisions)
+			if(z==0) continue;
+			//			for(double x = 0 ; x <= Math.PI*2; x+=cantLineas)
 			{
-				gl.glVertex3d(pos.x, pos.y, pos.z);
-				gl.glVertex3d(infX*Math.toDegrees(Math.cos(x)), infY*Math.toDegrees(Math.sin(x)), 0);
+				zi = 0;// infZ*Math.cos(x);
+				int i = 0;
+				for(double y = 0 ; y <= Math.PI*2; y+=cantLineas)
+				{
+					//					if(z%2==0)
+					VectorR3 p = new VectorR3(pos.x+cirq[i].x, pos.y+cirq[i].y, pos.z+cirq[i].z);
+					gl.glVertex3d(p.x, p.y, p.z);
+					VectorR3 e = new VectorR3(0,0,0);
+
+					for(AbstractCharge a : charges)
+					{
+						VectorR3 e1 = new VectorR3(1,1,1);
+						CargaPuntual c = (CargaPuntual)a;
+						VectorR3 R = p.resta(c.pos);
+						e1 = e1.prod(c._charge);
+						e1 = e1.prod(R);
+						e1 = e1.div(Math.pow(R.magnitud(),3));
+						e = e.suma(e1);
+					}
+					e = e.prod(getK());
+					e = e.unit();
+					e = e.prod(.2);
+
+					//					e.prod(new VectorR3(getK()*_charge*R.x/R.magnitud(),getK()*R.y/R.magnitud(),getK()*_charge*R.z/R.magnitud()));
+					gl.glVertex3d(pos.x+cirq[i].x+e.x, pos.y+cirq[i].y+e.y, pos.z+cirq[i].z+e.z);
+					xi = z*Math.cos(y);
+					yi = z*Math.sin(y);
+					//					if(z%2==0)
+					//					gl.glVertex3d(pos.x+xi,pos.y+yi,pos.z+zi);
+
+					cirq[i] = new VectorR3(xi,yi,zi);
+					i++;
+				}
 			}
 		}
 		gl.glEnd();
-		gl.glPopMatrix();	    
-
+		gl.glPopMatrix();
 	}
-
+	}
 }

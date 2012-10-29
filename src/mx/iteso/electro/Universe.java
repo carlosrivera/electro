@@ -127,7 +127,7 @@ public class Universe extends GLCanvas implements GLEventListener, KeyListener
 		for(AbstractCharge c : charges)
 		{
 			c.draw(gl);
-//			c.drawField(gl, 3);
+			c.drawField(gl, charges);
 		}
 
 	}

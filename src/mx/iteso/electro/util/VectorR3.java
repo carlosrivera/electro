@@ -26,8 +26,34 @@ public class VectorR3 {
 	{
 		return new VectorR3(x-v.x,y-v.y,z-v.z);
 	}
+	
+	public VectorR3 div(double s)
+	{
+		if(s!=0)
+		return new VectorR3(x/s,y/s,z/s);
+		return this;
+	}	
+	
+	public VectorR3 prod(double s)
+	{
+		return new VectorR3(x*s,y*s,z*s);
+	}
+	
+	public VectorR3 prod(VectorR3 v)
+	{
+		return new VectorR3(x*v.x,y*v.y,z*v.z);
+	}
+	
+	public VectorR3 unit()
+	{
+	return new VectorR3(x/magnitud(),y/magnitud(),z/magnitud());	
+	}	
 
 	public String toString()
+	{
+		return String.format("%1$,.1f",x)+","+String.format("%1$,.1f",y)+","+String.format("%1$,.1f",z);
+	}
+	public String toVector()
 	{
 		return String.format("%1$,.3f",x)+"i+"+String.format("%1$,.3f",y)+"j+"+String.format("%1$,.3f",z)+"k";
 	}
