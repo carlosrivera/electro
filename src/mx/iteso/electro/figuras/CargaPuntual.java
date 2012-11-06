@@ -49,6 +49,17 @@ public class CargaPuntual extends AbstractCharge{
 		this._charge = _charge;
 	}
 
+	// Renamed from mover()
+	public void setPosition(VectorR3 v)
+	{
+		pos = v;
+	}
+
+	public void move(VectorR3 v) 
+	{
+		pos = pos.suma(v);
+	}
+
 	public VectorR3 calculateForce(List<AbstractCharge> cargas)
 	{
 		fuerza = new VectorR3(0,0,0);
@@ -70,17 +81,6 @@ public class CargaPuntual extends AbstractCharge{
 		return fuerza;
 	}
 
-	// Renamed from mover()
-	public void setPosition(VectorR3 v)
-	{
-		pos = v;
-	}
-
-	public void move(VectorR3 v) 
-	{
-		pos = pos.suma(v);
-	}
-
 
 	public String toString()
 	{
@@ -100,13 +100,16 @@ public class CargaPuntual extends AbstractCharge{
 			gl.glColor3d(0, 0, 1);			
 		gl.glTranslated(pos.x, pos.y, pos.z);
 		glu.gluSphere(puntito, 0.12, 10, 10);
+		gl.glColor3d(1, 1, 1);
+		gl.glLineWidth(3);
 		gl.glBegin(GL.GL_LINES);
 		gl.glVertex3d(0, 0, 0);
 		gl.glVertex3d(fuerza.x/mf, fuerza.y/mf, fuerza.z/mf);
 		gl.glVertex3d(fuerza.x/mf, fuerza.y/mf, fuerza.z/mf);		
 		gl.glVertex3d(fuerza.x/mf-.05, fuerza.y/mf-.05, fuerza.z/mf-.05);		
 		gl.glEnd();
-		gl.glPopMatrix();	    
+		gl.glPopMatrix();
+		gl.glLineWidth(1);
 	}
 
 	@Override
@@ -155,12 +158,11 @@ public class CargaPuntual extends AbstractCharge{
 						VectorR3 e1 = new VectorR3(1,1,1);
 						CargaPuntual c = (CargaPuntual)a;
 						VectorR3 R = p.resta(c.pos);
-						e1 = e1.prod(c._charge);
+						e1 = e1.prod(getK()*c._charge);
 						e1 = e1.prod(R);
 						e1 = e1.div(Math.pow(R.magnitud(),3));
 						e = e.suma(e1);
 					}
-					e = e.prod(getK());
 					e = e.unit();
 					e = e.prod(.2);
 

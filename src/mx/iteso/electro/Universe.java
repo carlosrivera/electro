@@ -14,8 +14,11 @@ import static javax.media.opengl.GL.GL_TEXTURE_MIN_FILTER;
 import static javax.media.opengl.GL.GL_TEXTURE_WRAP_S;
 import static javax.media.opengl.GL.GL_TEXTURE_WRAP_T;
 
+import java.awt.Point;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
@@ -33,7 +36,7 @@ import com.sun.opengl.util.FPSAnimator;
 import com.sun.opengl.util.texture.Texture;
 import com.sun.opengl.util.texture.TextureIO;
 
-public class Universe extends GLCanvas implements GLEventListener, KeyListener
+public class Universe extends GLCanvas implements GLEventListener, KeyListener, MouseListener 
 {
 	/**
 	 * 
@@ -47,6 +50,7 @@ public class Universe extends GLCanvas implements GLEventListener, KeyListener
 	private Status currentStatus = Status.IDLE;
 	private Grid2 grid;
 	private List<AbstractCharge> charges;
+	private Point clicke = new Point();
 
 	private int xLimit = 100;
 	private int yLimit = 100;
@@ -55,7 +59,7 @@ public class Universe extends GLCanvas implements GLEventListener, KeyListener
 	enum Status 
 	{
 		IDLE, MOVE_FORWARD, MOVE_BACKWARDS, 
-		ROTATE_RIGHT, ROTATE_LEFT
+		ROTATE_RIGHT, ROTATE_LEFT, MOVE_UPWARD, MOVE_DOWNWARD
 	};
 
 	public Universe(List<AbstractCharge> charges)
@@ -67,6 +71,7 @@ public class Universe extends GLCanvas implements GLEventListener, KeyListener
 		// los manejara esta misma clase
 		addGLEventListener(this);
 		addKeyListener(this);
+		addMouseListener(this);
 		
 		grid = new Grid2();
 		this.charges = charges;
@@ -161,6 +166,10 @@ public class Universe extends GLCanvas implements GLEventListener, KeyListener
 		break;
 		case KeyEvent.VK_LEFT  : currentStatus = Status.ROTATE_LEFT;
 		break;
+		case KeyEvent.VK_PAGE_UP : currentStatus = Status.MOVE_UPWARD;
+		break;
+		case KeyEvent.VK_PAGE_DOWN : currentStatus = Status.MOVE_DOWNWARD;
+		break;
 		}
 
 	}
@@ -229,23 +238,33 @@ public class Universe extends GLCanvas implements GLEventListener, KeyListener
 	}
 
 
-	void rotateRight() {
-		observerAngle -= observerSpeed*10;
+	void rotateRight(int step) {
+		observerAngle -= observerSpeed*step;
 	}
 
 
-	void rotateLeft() {
-		observerAngle += observerSpeed*10;
+	void rotateLeft(int step) {
+		observerAngle += observerSpeed*step;
 	}
 
+	void moveDownward(int step) {
+		observerY -= observerSpeed*step;
+	}
+
+
+	void moveUpward(int step) {
+		observerY += observerSpeed*step;
+	}
 
 	void update() {
 		switch(currentStatus) {
 		case IDLE			: break;
 		case MOVE_FORWARD   : moveForward(); break;
 		case MOVE_BACKWARDS : moveBackwards(); break;
-		case ROTATE_RIGHT   : rotateRight(); break;
-		case ROTATE_LEFT    : rotateLeft(); break;
+		case ROTATE_RIGHT   : rotateRight(10); break;
+		case ROTATE_LEFT    : rotateLeft(10); break;
+		case MOVE_DOWNWARD  : moveDownward(1); break;
+		case MOVE_UPWARD	: moveUpward(1); break;
 		}
 
 	}
@@ -272,6 +291,55 @@ public class Universe extends GLCanvas implements GLEventListener, KeyListener
 		gl.glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 		gl.glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 		return texture;
+	}
+
+	@Override
+	public void mouseClicked(MouseEvent e) {
+	}
+
+	@Override
+	public void mousePressed(MouseEvent e) {
+		clicke = e.getLocationOnScreen();
+//		System.out.println(clicke);
+	}
+
+	@Override
+	public void mouseReleased(MouseEvent e) {
+		int moveX = clicke.x-e.getLocationOnScreen().x;
+		int moveY = clicke.y-e.getLocationOnScreen().y;
+		if(Math.abs(moveX) > 20)
+		{
+			if(moveX > 0)
+			{
+				rotateLeft(moveX/10);
+			}
+			else
+			{
+				rotateRight(-moveX/10);
+			}
+		}
+		if(Math.abs(moveY) > 20)
+		{
+			if(moveY > 0)
+			{
+				moveUpward(moveY/10);
+			}
+			else
+			{
+				moveDownward(-moveY/10);
+			}
+		}
+//		System.out.println(clicke.x-e.getLocationOnScreen().x);		
+	}
+
+	@Override
+	public void mouseEntered(MouseEvent e) {
+		
+	}
+
+	@Override
+	public void mouseExited(MouseEvent e) {
+		
 	}
 
 

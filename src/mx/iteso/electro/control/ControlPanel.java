@@ -20,10 +20,12 @@ import javax.swing.ListModel;
 
 import mx.iteso.electro.figuras.AbstractCharge;
 import mx.iteso.electro.figuras.CargaPuntual;
+import mx.iteso.electro.figuras.Volumen;
 import mx.iteso.electro.util.VectorR3;
 
 public class ControlPanel extends JPanel implements ActionListener,MouseListener{
 
+	static int count = 0;
 	CargaPuntual prueba;
 	Vector <AbstractCharge> cargas;
 	JLabel name;
@@ -36,6 +38,9 @@ public class ControlPanel extends JPanel implements ActionListener,MouseListener
 	JTextField posQXtxt;
 	JTextField posQYtxt;
 	JTextField posQZtxt;
+	JTextField widthtxt;
+	JTextField heightxt;
+	JTextField depthtxt;
 	JTextField fuerzaQtxt;
 
 	/**
@@ -69,11 +74,16 @@ public class ControlPanel extends JPanel implements ActionListener,MouseListener
 		list = new JList<AbstractCharge>(cargas);
 		list.addMouseListener(this);
 		JScrollPane cargasPanel = new JScrollPane(list);
-		JButton agregar = new JButton("Agregar carga");
+		JButton agregar = new JButton("Agregar carga puntual");
 		agregar.setActionCommand("agregar");
 		agregar.addActionListener(this);
 		agregar.setBackground(Color.black);
 		agregar.setForeground(Color.white);
+		JButton agregarF = new JButton("Agregar distribucion de carga");
+		agregarF.setActionCommand("agregarF");
+		agregarF.addActionListener(this);
+		agregarF.setBackground(Color.black);
+		agregarF.setForeground(Color.white);
 		JButton quitar = new JButton("Quitar carga");
 		quitar.setActionCommand("quitar");
 		quitar.addActionListener(this);
@@ -90,6 +100,12 @@ public class ControlPanel extends JPanel implements ActionListener,MouseListener
 		posYtxt = new JTextField("0");
 		JLabel posZ = new JLabel("Z=");
 		posZtxt = new JTextField("0");
+		JLabel width = new JLabel("Width=");
+		widthtxt = new JTextField("0");
+		JLabel heigh = new JLabel("Heigh=");
+		heightxt = new JTextField("0");
+		JLabel depth = new JLabel("Depth=");
+		depthtxt = new JTextField("0");
 
 		JButton calcular = new JButton("Calcular fuerza");
 		calcular.setActionCommand("calcular");
@@ -122,8 +138,15 @@ public class ControlPanel extends JPanel implements ActionListener,MouseListener
 		this.add(posYtxt);
 		this.add(posZ);
 		this.add(posZtxt);
+		this.add(width);
+		this.add(widthtxt);
+		this.add(heigh);
+		this.add(heightxt);
+		this.add(depth);
+		this.add(depthtxt);
 
 		this.add(agregar);
+		this.add(agregarF);
 		this.add(quitar);
 
 	}
@@ -136,7 +159,29 @@ public class ControlPanel extends JPanel implements ActionListener,MouseListener
 			double x = Double.parseDouble(posXtxt.getText());
 			double y = Double.parseDouble(posYtxt.getText());
 			double z = Double.parseDouble(posZtxt.getText());
-			cargas.add(new CargaPuntual(cargas.size(), carga,new VectorR3(x,y,z)));
+			cargas.add(new CargaPuntual(count, carga,new VectorR3(x,y,z)));
+			DefaultListModel<AbstractCharge> mod = new DefaultListModel<AbstractCharge>();
+			count++;
+			for(AbstractCharge obj : cargas)
+			{
+				mod.addElement(obj);
+			}
+			list.setModel(mod);
+			cargatxt.setText("0");
+			posXtxt.setText("0");
+			posYtxt.setText("0");
+			posZtxt.setText("0");
+		}
+		if(e.getActionCommand().equals("agregarF"))
+		{
+			double carga = Double.parseDouble(cargatxt.getText());
+			double x = Double.parseDouble(posXtxt.getText());
+			double y = Double.parseDouble(posYtxt.getText());
+			double z = Double.parseDouble(posZtxt.getText());
+			double w = Double.parseDouble(widthtxt.getText());
+			double h = Double.parseDouble(heightxt.getText());
+			double d = Double.parseDouble(depthtxt.getText());
+			cargas.add(new Volumen(count, carga,new VectorR3(x,y,z), new VectorR3(w,h,d)));
 			DefaultListModel<AbstractCharge> mod = new DefaultListModel<AbstractCharge>();
 			for(AbstractCharge obj : cargas)
 			{
@@ -147,6 +192,9 @@ public class ControlPanel extends JPanel implements ActionListener,MouseListener
 			posXtxt.setText("0");
 			posYtxt.setText("0");
 			posZtxt.setText("0");
+			widthtxt.setText("0");
+			heightxt.setText("0");
+			depthtxt.setText("0");
 		}
 		if(e.getActionCommand().equals("quitar"))
 		{
