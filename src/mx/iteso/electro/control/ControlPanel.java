@@ -25,7 +25,6 @@ import mx.iteso.electro.util.VectorR3;
 
 public class ControlPanel extends JPanel implements ActionListener,MouseListener{
 
-	static int count = 0;
 	CargaPuntual prueba;
 	Vector <AbstractCharge> cargas;
 	JLabel name;
@@ -52,7 +51,7 @@ public class ControlPanel extends JPanel implements ActionListener,MouseListener
 	{
 		super();
 
-		prueba = new CargaPuntual(0,1, new VectorR3(0,0,0));
+		prueba = new CargaPuntual(1, new VectorR3(0,0,0));
 		cargas = charges;
 
 		this.setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
@@ -129,6 +128,7 @@ public class ControlPanel extends JPanel implements ActionListener,MouseListener
 
 		this.add(name);
 		this.add(cargasPanel);
+		this.add(quitar);
 
 		this.add(carga);
 		this.add(cargatxt);
@@ -147,7 +147,6 @@ public class ControlPanel extends JPanel implements ActionListener,MouseListener
 
 		this.add(agregar);
 		this.add(agregarF);
-		this.add(quitar);
 
 	}
 
@@ -159,9 +158,8 @@ public class ControlPanel extends JPanel implements ActionListener,MouseListener
 			double x = Double.parseDouble(posXtxt.getText());
 			double y = Double.parseDouble(posYtxt.getText());
 			double z = Double.parseDouble(posZtxt.getText());
-			cargas.add(new CargaPuntual(count, carga,new VectorR3(x,y,z)));
+			cargas.add(new CargaPuntual(carga,new VectorR3(x,y,z)));
 			DefaultListModel<AbstractCharge> mod = new DefaultListModel<AbstractCharge>();
-			count++;
 			for(AbstractCharge obj : cargas)
 			{
 				mod.addElement(obj);
@@ -171,6 +169,12 @@ public class ControlPanel extends JPanel implements ActionListener,MouseListener
 			posXtxt.setText("0");
 			posYtxt.setText("0");
 			posZtxt.setText("0");
+			
+			for(AbstractCharge a : cargas)
+			{
+				a.resetE();
+			}
+			
 		}
 		if(e.getActionCommand().equals("agregarF"))
 		{
@@ -181,7 +185,7 @@ public class ControlPanel extends JPanel implements ActionListener,MouseListener
 			double w = Double.parseDouble(widthtxt.getText());
 			double h = Double.parseDouble(heightxt.getText());
 			double d = Double.parseDouble(depthtxt.getText());
-			cargas.add(new Volumen(count, carga,new VectorR3(x,y,z), new VectorR3(w,h,d)));
+			cargas.add(new Volumen(carga,new VectorR3(x,y,z), new VectorR3(w,h,d)));
 			DefaultListModel<AbstractCharge> mod = new DefaultListModel<AbstractCharge>();
 			for(AbstractCharge obj : cargas)
 			{
@@ -195,6 +199,12 @@ public class ControlPanel extends JPanel implements ActionListener,MouseListener
 			widthtxt.setText("0");
 			heightxt.setText("0");
 			depthtxt.setText("0");
+			
+			for(AbstractCharge a : cargas)
+			{
+				a.resetE();
+			}
+
 		}
 		if(e.getActionCommand().equals("quitar"))
 		{
@@ -209,6 +219,15 @@ public class ControlPanel extends JPanel implements ActionListener,MouseListener
 			posXtxt.setText("0");
 			posYtxt.setText("0");
 			posZtxt.setText("0");
+			widthtxt.setText("0");
+			heightxt.setText("0");
+			depthtxt.setText("0");
+			
+			for(AbstractCharge a : cargas)
+			{
+				a.resetE();
+			}
+
 		}
 		if(e.getActionCommand().equals("calcular"))
 		{
@@ -232,12 +251,19 @@ public class ControlPanel extends JPanel implements ActionListener,MouseListener
 			ListModel<AbstractCharge> dlm = list.getModel();
 			if(dlm.getSize()>index && index>=0)
 			{
-				CargaPuntual item = (CargaPuntual) dlm.getElementAt(index);;
+				AbstractCharge item = (AbstractCharge) dlm.getElementAt(index);;
 				list.ensureIndexIsVisible(index);
-				cargatxt.setText(""+item.get_charge());
-				 posXtxt.setText(""+item.getPos().x);
-				 posYtxt.setText(""+item.getPos().y);
-				 posZtxt.setText(""+item.getPos().z);
+				cargatxt.setText(""+item.getCharge());
+				 posXtxt.setText(""+item.getPosition().x);
+				 posYtxt.setText(""+item.getPosition().y);
+				 posZtxt.setText(""+item.getPosition().z);
+				 
+				 if(item instanceof Volumen)
+				 {					 
+				 widthtxt.setText(""+((Volumen)item).getVolume().x);
+				 heightxt.setText(""+((Volumen)item).getVolume().y);
+				 depthtxt.setText(""+((Volumen)item).getVolume().z);
+				 }
 			}
 		}
 		if(e.getClickCount() == 2)
@@ -246,40 +272,35 @@ public class ControlPanel extends JPanel implements ActionListener,MouseListener
 			ListModel<AbstractCharge> dlm = list.getModel();
 			if(dlm.getSize()>index && index>=0)
 			{
+				if(dlm.getElementAt(index) instanceof CargaPuntual)
+				{
 				CargaPuntual item = (CargaPuntual) dlm.getElementAt(index);;
 				list.ensureIndexIsVisible(index);
-				cargaQtxt.setText(""+item.get_charge());
-				 posQXtxt.setText(""+item.getPos().x);
-				 posQYtxt.setText(""+item.getPos().y);
-				 posQZtxt.setText(""+item.getPos().z);
+				cargaQtxt.setText(""+item.getCharge());
+				 posQXtxt.setText(""+item.getPosition().x);
+				 posQYtxt.setText(""+item.getPosition().y);
+				 posQZtxt.setText(""+item.getPosition().z);
 				 fuerzaQtxt.setText(""+item.getFuerza());
 				 prueba = item;
+				}
 			}
 		}
 	}
 
 	@Override
 	public void mousePressed(MouseEvent e) {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
 	public void mouseReleased(MouseEvent e) {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
 	public void mouseEntered(MouseEvent e) {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
 	public void mouseExited(MouseEvent e) {
-		// TODO Auto-generated method stub
-
 	}
 
 

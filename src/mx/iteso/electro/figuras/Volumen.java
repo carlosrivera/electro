@@ -8,31 +8,45 @@ import mx.iteso.electro.util.VectorR3;
 
 public class Volumen extends AbstractCharge {
 	private VectorR3 pos;
-	private VectorR3 vol;
+	privol;
 	private VectorR3 fuerza;
-	private double _charge;
 	private String name;
 
-	public Volumen(int name, double charge, VectorR3 pos, VectorR3 vol)
+	public Volumen(double charge, VectorR3 pos, VectorR3 vol)
 	{
-		this._charge = charge;
+		super.charge = charge;
 		this.pos = pos;
 		this.vol = vol;
-		this.name = "q"+name;
+		this.name = "q"+n;
+		n++;
 		fuerza = new VectorR3(0,0,0);
+		if(vol.x == 0 )
+			vol.x = 1E-5;
+		if(vol.y == 0 )
+			vol.y = 1E-5;
+		if(vol.z == 0 )
+			vol.z = 1E-5;
 	}
-	
-	public String toString()
+g()
 	{
 		return name+" "+pos.toVector()+" F="+String.format("%1$,.3f",fuerza.magnitud());
 	}
 
 	
 	@Override
+	public void dra
+	@Override
 	public void draw(GL gl) {
+		VectorR3 v = new VectorR3(vol.x, vol.y, vol.z);
+		if(v.x <.12)
+			v.x = .12;
+		if(v.y <.12)
+			v.y = .12;
+		if(v.z <.12)
+			v.z = .12;
+		
 		gl.glPushMatrix();
-		if(_charge>=0)
-			gl.glColor3d(1, 0, 0);
+		if(0);
 		else
 			gl.glColor3d(0, 0, 1);			
 		gl.glTranslated(pos.x, pos.y, pos.z);
@@ -44,39 +58,78 @@ public class Volumen extends AbstractCharge {
 		gl.glEnd();
 		gl.glBegin(GL.GL_QUADS);
 		gl.glVertex3d(-vol.x/2,vol.y/2,-vol.z/2);
-		gl.glVertex3d(vol.x/2,vol.y/2,-vol.z/2);
-		gl.glVertex3d(vol.x/2,-vol.y/2,-vol.z/2);
-		gl.glVertex3d(-vol.x/2,-vol.y/2,-vol.z/2);
-		
-//		gl.glVertex3d(vol.x/2,-vol.y/2,vol.z/2);
-//		gl.glVertex3d(-vol.x/2,-vol.y/2,vol.z/2);
-//		gl.glVertex3d(-vol.x/2,-vol.y/2,-vol.z/2);
-//		gl.glVertex3d(vol.x/2,-vol.y/2,-vol.z/2);
-//		
-//		gl.glVertex3d(-vol.x/2,-vol.y/2,-vol.z/2);
-//		gl.glVertex3d(vol.x/2,-vol.y/2,-vol.z/2);
-//		gl.glVertex3d(vol.x/2,vol.y/2,-vol.z/2);
-//		gl.glVertex3d(-vol.x/2,vol.y/2,-vol.z/2);
-//		
-//		gl.glVertex3d(vol.x/2,vol.y/2,vol.z/2);
-//		gl.glVertex3d(-vol.x/2,vol.y/2,vol.z/2);
-//		gl.glVertex3d(vol.x/2,vol.y/2,vol.z/2);
-//		gl.glVertex3d(-vol.x/2,vol.y/2,vol.z/2);
-		
-		gl.glEnd();
-		gl.glPopMatrix();
-		gl.glLineWidth(1);
+		g//frente
+		gl.glVertex3d(-v.x/2,v.y/2,-v.z/2);
+		gl.glVertex3d(v.x/2,v.y/2,-v.z/2);
+		gl.glVertex3d(v.x/2,-v.y/2,-v.z/2);
+		gl.glVertex3d(-v.x/2,-v.y/2,-v.z/2);
 
-	}
+		//fondo
+		gl.glVertex3d(-v.x/2,-v.y/2,v.z/2);
+		gl.glVertex3d(v.x/2,-v.y/2,v.z/2);
+		gl.glVertex3d(v.x/2,v.y/2,v.z/2);
+		gl.glVertex3d(-v.x/2,v.y/2,v.z/2);
 
-	@Override
+		//abajo
+		gl.glVertex3d(-v.x/2,-v.y/2,-v.z/2);
+		gl.glVertex3d(v.x/2,-v.y/2,-v.z/2);
+		gl.glVertex3d(v.x/2,-v.y/2,v.z/2);
+		gl.glVertex3d(-v.x/2,-v.y/2,v.z/2);
+
+		//arriba
+		gl.glVertex3d(-v.x/2,v.y/2,v.z/2);
+		gl.glVertex3d(v.x/2,v.y/2,v.z/2);
+		gl.glVertex3d(v.x/2,v.y/2,-v.z/2);
+		gl.glVertex3d(-v.x/2,v.y/2,-v.z/2);
+
+		//der
+		gl.glVertex3d(v.x/2,-v.y/2,-v.z/2);
+		gl.glVertex3d(v.x/2,v.y/2,-v.z/2);
+		gl.glVertex3d(v.x/2,v.y/2,v.z/2);
+		gl.glVertex3d(v.x/2,-v.y/2,v.z/2);
+
+		//izq
+		gl.glVertex3d(-v.x/2,-v.y/2,v.z/2);
+		gl.glVertex3d(-v.x/2,v.y/2,v.z/2);
+		gl.glVertex3d(-v.x/2,v.y/2,-v.z/2);
+		gl.glVertex3d(-v.x/2,-v.y/2,-v.z/2);
+verride
 	public void drawField(GL gl, List<AbstractCharge> charges) {
 
 	}
 
 	@Override
-	public VectorR3 calculateForce(List<AbstractCharge> carga) {
+	pVectorR3 calculateE(VectorR3 p)
+	{		
+		VectorR3 e1 = new VectorR3(1,1,1);
+		e1 = e1.prod(getK());
+		e1 = e1.prod(charge);
+
+		double dif = .05;
+		if(in == null)
+		{
+		in = new VectorR3(0,0,0);
+		for(double x = -vol.x/2; x < vol.x/2 ; x+=dif)
+			for(double y = -vol.y/2; y < vol.y/2 ; y+=dif)
+				for(double z = -vol.z/2; z < vol.z/2 ; z+=dif)
+				{
+					VectorR3 dR = p.resta(new VectorR3(pos.x+x, pos.y+y, pos.z+z));
+					VectorR3 i = new VectorR3(1,1,1);
+					i = i.prod(dR);			
+					i = i.div(Math.pow(dR.magnitud(),3));
+					in = in.suma(i);
+				}
+		}
+		e1 = e1.prod(in);
+
+		return e1;a) {
 		return null;
 	}
+
+}
+ew VectorR3(0,0,0);
+	}
+
+	public VectorR3 getVolume() {return vol;}
 
 }
